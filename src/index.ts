@@ -8,9 +8,8 @@ app.use(express.json())
 
 const port = process.env.PORT
 
-app.get("/", (req, res) => {
-  res.send({ msg: "hello world!" })
-})
+import userRoutes from "../src/routes/index"
+userRoutes(app)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
