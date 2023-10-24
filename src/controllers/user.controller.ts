@@ -6,10 +6,13 @@ import {
   updateUser,
 } from "../repositorys/user.repository"
 import { Response, Request } from "express"
+import bcrypt from "bcrypt"
 
 //Criando novo usuário
 export async function create(req: Request, res: Response) {
   try {
+    const hashPassword = await bcrypt.hash(req.body.password, 10)
+    req.body.password = hashPassword
     const user = await createUser(req.body)
     res.status(200).send(user)
   } catch (error) {
@@ -20,7 +23,9 @@ export async function create(req: Request, res: Response) {
 //Buscar todos usuários
 export async function get(req: Request, res: Response) {
   try {
-    const users = await getAll()
+    const skip = Number(req?.query?.skip) || 0
+    const take = Number(req?.query.take) || 20
+    const users = await getAll(skip, take)
     res.status(200).send(users)
   } catch (error) {
     res.status(400).send(error)
