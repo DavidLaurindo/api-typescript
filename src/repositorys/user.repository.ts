@@ -24,6 +24,8 @@ export async function getAll(skip: number, take: number) {
         name: true,
         password: false,
         email: true,
+        createdAt: false,
+        updatedAt: false,
       },
       skip,
       take,

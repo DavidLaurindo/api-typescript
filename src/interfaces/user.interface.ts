@@ -3,3 +3,9 @@ export interface UserInfo {
   email: string
   password: string
 }
+
+export interface ProductInfo {
+  name: string
+  price: number
+  description: string
+}
