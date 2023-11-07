@@ -6,11 +6,19 @@ import {
   getById,
   updateProduct,
 } from "../repositorys/product.repository"
+import createProductValidator from "../validator/create.product.validator"
 
 //Criando novo produto
 export async function create(req: Request, res: Response) {
   try {
-    const product = await createProduct(req.body)
+    const { error, value } = createProductValidator.validate(req.body)
+    if (error) {
+      return res
+        .status(400)
+        .send(error.details.map((err) => err.message).join(", "))
+    }
+
+    const product = await createProduct(value)
     res.status(200).send(product)
   } catch (error) {
     res.status(400).send(error)

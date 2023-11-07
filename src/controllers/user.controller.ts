@@ -7,13 +7,21 @@ import {
 } from "../repositorys/user.repository"
 import { Response, Request } from "express"
 import bcrypt from "bcrypt"
+import createUserValidator from "../validator/create.user.validator"
 
 //Criando novo usuário
 export async function create(req: Request, res: Response) {
   try {
-    const hashPassword = await bcrypt.hash(req.body.password, 10)
-    req.body.password = hashPassword
-    const user = await createUser(req.body)
+    const { error, value } = createUserValidator.validate(req.body)
+    if (error) {
+      return res
+        .status(400)
+        .send(error.details.map((err) => err.message).join(", "))
+    }
+
+    const hashPassword = await bcrypt.hash(value.password, 10)
+    value.password = hashPassword
+    const user = await createUser(value)
     res.status(200).send(user)
   } catch (error) {
     res.status(400).send(error)
