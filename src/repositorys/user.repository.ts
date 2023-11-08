@@ -1,6 +1,16 @@
 import { prisma } from "../services/prisma"
 import { UserInfo } from "../interfaces/user.interface"
 
+//Verificar Usuário
+export async function isEmailRegistered(email: string): Promise<boolean> {
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  })
+  return !!existingUser
+}
+
 //Criando novo usuário
 export async function createUser(data: UserInfo) {
   const user = await prisma.user.create({
