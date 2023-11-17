@@ -3,7 +3,7 @@ import {
   deleteUser,
   getAll,
   getById,
-  isEmailRegistered,
+  isUserRegistered,
   updateUser,
 } from "../repositorys/user.repository"
 import { Response, Request } from "express"
@@ -20,18 +20,25 @@ export async function create(req: Request, res: Response) {
         .send(error.details.map((err) => err.message).join(", "))
     }
 
-    //Verificar Email no Banco
-    const email = value.email
-    const isRegistered = await isEmailRegistered(email)
+    //Verificar user e email no banco:
+    const { email, name } = value
 
-    if (isRegistered) {
-      return res.status(409).send("Usuário já cadastrado")
-    } else {
-      const hashPassword = await bcrypt.hash(value.password, 10)
-      value.password = hashPassword
-      const user = await createUser(value)
-      res.status(200).send(user)
+    //Verificar Email;
+    const emailRegistered = await isUserRegistered(email)
+    if (emailRegistered) {
+      return res.status(409).send("Email já cadastrado")
     }
+
+    //Verificar Usuário;
+    const nameRegistered = await isUserRegistered(name)
+    if (nameRegistered) {
+      return res.status(409).send("Nome de usuário já cadastrado")
+    }
+
+    const hashPassword = await bcrypt.hash(value.password, 10)
+    value.password = hashPassword
+    const user = await createUser(value)
+    res.status(200).send(user)
   } catch (error) {
     res.status(400).send(error)
   }

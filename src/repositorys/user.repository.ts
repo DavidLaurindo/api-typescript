@@ -1,11 +1,11 @@
 import { prisma } from "../services/prisma"
 import { UserInfo } from "../interfaces/user.interface"
 
-//Verificar Usuário
-export async function isEmailRegistered(email: string): Promise<boolean> {
-  const existingUser = await prisma.user.findUnique({
+//Verificar Usuário:
+export async function isUserRegistered(name: string): Promise<boolean> {
+  const existingUser = await prisma.user.findFirst({
     where: {
-      email,
+      OR: [{ name }, { email: name }],
     },
   })
   return !!existingUser

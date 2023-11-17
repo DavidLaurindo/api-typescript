@@ -10,8 +10,10 @@ const port = process.env.PORT
 
 import userRoutes from "../src/routes/index"
 import productRoutes from "../src/routes/index"
+import authRoutes from "../src/routes/index"
 userRoutes(app)
 productRoutes(app)
+authRoutes(app)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
