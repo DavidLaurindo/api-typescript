@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request } from "express"
 import { verify } from "jsonwebtoken"
+import { JwtPayload } from "../interfaces/jwt.interface"
 
 export function authMiddleware(
   req: Request,
@@ -17,7 +18,11 @@ export function authMiddleware(
   const passJwt = process.env.SECRET as string
 
   try {
-    verify(token, passJwt)
+    const decoded = verify(token, passJwt)
+    const { id } = decoded as JwtPayload
+
+    req.userId = id
+
     next()
   } catch (error) {
     return res.status(401).json({ error: "Token inválido" })

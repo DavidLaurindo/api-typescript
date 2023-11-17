@@ -85,6 +85,14 @@ export async function updateUser(id: string, data: UserInfo) {
       id,
     },
     data,
+    select: {
+      id: false,
+      name: true,
+      email: true,
+      password: false,
+      createdAt: false,
+      updatedAt: false,
+    },
   })
   return user
 }
