@@ -13,5 +13,5 @@ export function userRoutes(app: Express) {
   app.get("/user", get)
   app.get("/user/:id", authMiddleware, getId)
   app.put("/user/:id", authMiddleware, update)
-  app.delete("/user/:id", remove)
+  app.delete("/user/:id", authMiddleware, remove)
 }
